@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <title>Test</title>
+</head>
+<body>
+
+<script>
+    //definicion de funciones y validadores
+    /*
+    La siguiente funcion, generadora de HTML posee 2 parametros:
+    a)padreObjeto: es de tipo Element, representa al objeto padre principal
+    b)hijos: debe ser un array con una sintaxis particular, contiene los datos que los objetos hijos de padreObjeto deben tener.
+    */
+    function generarHTML(hijos,padreObjeto){ //funcion recursiva
+        var elemento="";
+        var atributosValores="";
+        var hijoObjeto="";
+       for(var hijo of hijos){ //elemento es OBJETO con propiedad div:array
+
+            for(var propiedad in hijo){ //propiedad vale div
+                
+                
+            
+            if(propiedad!=="atributos"){
+                hijoObjeto = document.createElement(propiedad);
+                padreObjeto.append(hijoObjeto);
+                if(hijo[propiedad] !== null){
+                    if(typeof hijo[propiedad][0] == "string"){
+                        hijoObjeto.append(document.createTextNode(hijo[propiedad][0]));
+                    }else{
+                        generarHTML(hijo[propiedad],hijoObjeto);
+                    }
+                }
+                
+            }else{
+                if(hijo[propiedad] !== null){
+                atributosValores=hijo[propiedad].split('/');
+                if(typeof atributosValores == "string"){
+                    atributosValores=atributosValores.split('=');
+                    hijoObjeto.setAttribute(atributosValores[0],atributosValores[1]);
+                }else if(atributosValores instanceof Array){
+                    for(var atributoValor of atributosValores){
+                    atributoValor=atributoValor.split('=');
+                    hijoObjeto.setAttribute(atributoValor[0],atributoValor[1]);
+                }
+                }
+                }
+                
+            }
+                
+                
+        }
+    }
+
+    }
+    var validadorNombre={
+        validado:null,
+        error:null,
+        validar: function(nombre){
+            if(nombre===""){
+                this.error="Este campo es obligatorio";
+                this.validado=false;
+            }else if(nombre.length<3){
+                this.error="El nombre debe tener como minimo 3 caracteres";
+                this.validado=false;
+            }else{
+                this.error="";
+                this.validado=true;
+            }
+        }
+    }
+    var validadorApellido={
+        validado:null,
+        error:null,
+        validar: function(apellido){
+            if(apellido===""){
+                this.error="Este campo es obligatorio";
+                this.validado=false;
+            }else if(apellido.length<3){
+                this.error="El apellido debe tener como minimo 3 caracteres";
+                this.validado=false;
+            }else{
+                this.error="";
+                this.validado=true;
+            }
+        }
+    }
+    var validadorEdad={
+        validado:null,
+        error:null,
+        validar: function(edad){
+            if(!edad){
+                this.error="Este campo es obligatorio";
+                this.validado=false;
+            }else if(edad>=150){
+                this.error="La edad debe ser menor a 150";
+                this.validado=false;
+            }else if(edad<0){
+                this.error="La edad debe ser válida";
+                this.validado=false;
+            }else{
+                this.error="";
+                this.validado=true;
+            }
+        }
+    }
+    var validadorEmail={
+        validado:null,
+        error:null,
+        validar: function(email){
+            if(email===""){
+                this.error="Este campo es obligatorio";
+                this.validado=false;
+            }else if(!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)){
+                this.error="El email debe tener un formato valido";
+                this.validado=false;
+            }else{
+                this.error="";
+                this.validado=true;
+            }
+        }
+    }
+    var validadorContraseña={
+        validado:null,
+        error:null,
+
+        validar: function(contraseña){
+            if(contraseña===""){
+                this.error="Este campo es obligatorio";
+                this.validado=false;
+            }else if(contraseña.length<8){
+                this.error="La contraseña debe tener como minimo 8 caracteres";
+                this.validado=false;
+            }else{
+                this.error="";
+                this.validado=true;
+            }
+        }
+    }
+    var validadorConfirmacionContraseña={
+        validado:null,
+        error:null,
+        validar: function(confirmacionContraseña, contraseña){
+            if(confirmacionContraseña===""){
+                this.error="Este campo es obligatorio";
+                this.validado=false;
+            }else if(confirmacionContraseña!==contraseña){
+                this.error="La contraseña confirmada no coincide";
+                this.validado=false;
+            }else{
+                this.error="";
+                this.validado=true;
+            }
+        }
+    }
+    var validadorFormulario = {
+        validado:null,
+           validar: function(){
+              this.validado=validadorNombre.validado && validadorApellido.validado && validadorEdad.validado && validadorEmail.validado && validadorContraseña.validado && validadorConfirmacionContraseña.validado;
+        }
+    }
+    //proceso principal
+    /*
+    En la sintaxis del array de hijosForm, un elemento padre, el cual representa a una etiqueta HTML, posee 2 propiedades: 
+
+    1) Una cuyo nombre es el nombre de la etiqueta, y cuyo valor puede ser:
+    a) En el caso de que esa etiqueta tenga hijos, un array conteniendo a los objetos que representan a los hijos de esa etiqueta.
+    b) En el caso de que esa etiqueta no tenga hijos, null.
+
+    Los hijos del elemento padre pueden ser del tipo string u objeto:
+    a)El tipo string  indica que la etiqueta posee texto como hijo.
+    b)El tipo objeto indica que la etiqueta posee otra etiqueta HTML como hija.
+
+    2) Otro llamado "atributos" cuyo valor puede ser: 
+    a) En el caso de que esa etiqueta tenga atributos, un string con una sintaxis particular que indica los atributos de esa etiqueta.
+    b) Si esa etiqueta no posee atributos, null.
+
+    Sintaxis del string:
+    Cada par atributo-valor está separado del otro por el caracter / y cada atributo está separado de su valor por el caracter =
+    ACLARACION: el valor no debe estar entre "".
+    */
+
+    var hijosForm=[{div:[{label:["Nombre"],atributos:"for=nombre/style=display:block"},{input:null,atributos:"type=text/name=nombre/id=nombre/style=display:block;float:left"},{p:null,atributos:"style=float:left;color:red;margin-bottom:6px/id=err-nombre"}],atributos:"style=overflow:hidden"},
+                        {div:[{label:["Apellido"],atributos:"for=apellido/style=display:block"},{input:null,atributos:"type=text/name=apellido/id=apellido/style=display:block;float:left"},{p:null,atributos:"style=float:left;color:red;margin-bottom:6px/id=err-apellido"}],atributos:"style=overflow:hidden"},
+                        {div:[{label:["Edad"],atributos:"for=edad/style=display:block"},{input:null,atributos:"type=number/name=edad/id=edad/style=display:block;float:left"},{p:null,atributos:"style=float:left;color:red;margin-bottom:6px/id=err-edad"}],atributos:"style=overflow:hidden"},
+                        {div:[{label:["Email"],atributos:"for=email/style=display:block"},{input:null,atributos:"type=email/name=email/id=email/style=display:block;float:left"},{p:null,atributos:"style=float:left;color:red;margin-bottom:6px/id=err-email"}],atributos:"style=overflow:hidden"},
+                        {div:[{label:["Contraseña"],atributos:"for=contraseña/style=display:block"},{input:null,atributos:"type=password/name=contraseña/id=contraseña/style=display:block;float:left"},{p:null,atributos:"style=float:left;color:red;margin-bottom:6px/id=err-contraseña"}],atributos:"style=overflow:hidden"},
+                        {div:[{label:["Confirmar Contraseña"],atributos:"for=confirmacionContraseña/style=display:block"},{input:null,atributos:"type=password/name=confirmacionContraseña/id=confirmacionContraseña/style=display:block;float:left"},{p:null,atributos:"style=float:left;color:red;margin-bottom:6px/id=err-confirmacionContraseña"}],atributos:"style=overflow:hidden"},
+                        {div:[{input:null,atributos:"type=submit/value=Enviar/style=display:block;float:left"}],atributos:"style=overflow:hidden"}]; //se genera el array con la sintaxis particular
+    var formObjeto=document.createElement("form"); //se genera el objeto padre principal (el formulario)
+    document.body.append(formObjeto); //lo integramos al body
+    generarHTML(hijosForm,formObjeto); //ejecutamos la funcion que genera el HTML
+
+    textosErrores=[];
+    errores=[];
+    nombresErrores=["err-nombre","err-apellido","err-edad","err-email","err-contraseña","err-confirmacionContraseña"];
+    for(var i=0;i<6;i++){
+        errores.push(document.getElementById(nombresErrores[i]));
+        textosErrores.push(document.createTextNode(""));
+    }
+
+    var elementos=Array.from(formObjeto.elements);
+    var errNombre=document.getElementById("err-nombre")
+    var textErrNombre=document.createTextNode("");
+    var errApellido=document.getElementById("err-apellido")
+    var textErrApellido=document.createTextNode("");
+    var errEdad=document.getElementById("err-edad")
+    var textErrEdad=document.createTextNode("");
+    var errEmail=document.getElementById("err-email")
+    var textErrEmail=document.createTextNode("");
+    var errContraseña=document.getElementById("err-contraseña")
+    var textErrContraseña=document.createTextNode("");
+    var errConfirmacionContraseña=document.getElementById("err-confirmacionContraseña")
+    var textErrConfirmacionContraseña=document.createTextNode("");
+
+    elementos[0].onchange=function(){ 
+        validadorNombre.validar(elementos[0].value);   
+        textosErrores[0].nodeValue=validadorNombre.error;
+        errores[0].append(textosErrores[0]);
+    }
+    elementos[1].onchange=function(){ 
+        validadorApellido.validar(elementos[1].value);   
+        textosErrores[1].nodeValue=validadorApellido.error;
+        errores[1].append(textosErrores[1]);
+    }
+    elementos[2].onchange=function(){ 
+        validadorEdad.validar(elementos[2].value);   
+        textosErrores[2].nodeValue=validadorEdad.error;
+        errores[2].append(textosErrores[2]);
+    }
+    elementos[3].onchange=function(){ 
+        validadorEmail.validar(elementos[3].value);   
+        textosErrores[3].nodeValue=validadorEmail.error;
+        errores[3].append(textosErrores[3]);
+    }
+    elementos[4].onchange=function(){ 
+        validadorContraseña.validar(elementos[4].value);   
+        textosErrores[4].nodeValue=validadorContraseña.error;
+        errores[4].append(textosErrores[4]);
+    }
+    elementos[5].onchange=function(){ 
+        validadorConfirmacionContraseña.validar(elementos[5].value,elementos[4].value);   
+        textosErrores[5].nodeValue=validadorConfirmacionContraseña.error;
+        errores[5].append(textosErrores[5]);
+    }
+    formObjeto.onsubmit =function(event){
+        validadorFormulario.validar();
+        if(validadorFormulario.validado){
+            formObjeto.style.display="none";
+            var p=document.createElement("h1")
+document.body.append(p)
+var nodo=document.createTextNode("Registro exitoso")
+p.append(nodo);
+            
+            
+           }else{
+               for(var i=0;i<6;i++){
+                if(elementos[i].value===""){
+                    textosErrores[i].nodeValue="Este campo es obligatorio";
+                    errores[i].append(textosErrores[i]);
+                }
+               }
+           }
+        event.preventDefault();
+    }
+</script>
+
+</body>
+</html>
